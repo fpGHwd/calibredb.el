@@ -1,5 +1,9 @@
 #+TITLE: RELEASES
 #+STARTUP: nofold
+** =2026-04-12=
+Version *2.14.0*:
+- Add folder support: Any added folder as a libary will be generated a .metadata.calibre file. Same as Folder Device in calibre GUI.
+
 ** =2024-07-07=
 Version *2.13.0*:
 - Support Pages: No matter how big the database was, calibredb only query the

@@ -105,6 +105,11 @@ selecting the new item."
                                (s-contains? (car lib) result))
                              calibredb-library-alist)))
         (setq calibredb-root-dir (car library))
+        ;; update or generate .metadata.calibre
+        (shell-command-to-string (format "%s -e %s -- %s"
+                                         calibredb-debug-program
+                                         calibredb-folder-program
+                                         calibredb-root-dir))
         (setq calibredb-db-dir (expand-file-name ".metadata.calibre" calibredb-root-dir))
         (calibredb-search-update-buffer :folder t))))))
 
@@ -147,7 +152,12 @@ selecting the new item."
                                (s-contains? (car lib) result))
                              calibredb-library-alist)))
         (setq calibredb-root-dir (car library))
-        (setq calibredb-db-dir nil)
+        ;; update or generate .metadata.calibre
+        (shell-command-to-string (format "%s -e %s -- %s"
+                                         calibredb-debug-program
+                                         calibredb-folder-program
+                                         calibredb-root-dir))
+        (setq calibredb-db-dir (expand-file-name ".metadata.calibre" calibredb-root-dir))
         (calibredb-search-update-buffer :folder t))))))
 
 (defun calibredb-library-next ()
@@ -188,7 +198,12 @@ selecting the new item."
                                (s-contains? (car lib) result))
                              calibredb-library-alist)))
         (setq calibredb-root-dir (car library))
-        (setq calibredb-db-dir nil)
+        ;; update or generate .metadata.calibre
+        (shell-command-to-string (format "%s -e %s -- %s"
+                                         calibredb-debug-program
+                                         calibredb-folder-program
+                                         calibredb-root-dir))
+        (setq calibredb-db-dir (expand-file-name ".metadata.calibre" calibredb-root-dir))
         (calibredb-search-update-buffer :folder t))))))
 
 (defun calibredb-virtual-library-filter (keyword)

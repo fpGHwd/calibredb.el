@@ -6,7 +6,7 @@
 ;; URL: https://github.com/chenyanming/calibredb.el
 ;; Keywords: tools
 ;; Created: 9 May 2020
-;; Version: 2.13.0
+;; Version: 2.14.0
 ;; Package-Requires: ((emacs "29.1") (org "9.3") (transient "0.1.0") (s "1.12.0") (dash "2.17.0") (request "0.3.3") (esxml "0.3.7"))
 ;;
 ;; This file is NOT part of GNU Emacs.
@@ -89,14 +89,17 @@
            (let ((cand (calibredb-search-keyword-filter calibredb-search-filter)))
              (goto-char (point-min))
              (calibredb-ref-default-bibliography)))))
-   ;; .metadata.calibre
-   ((and (file-exists-p (expand-file-name ".metadata.calibre" calibredb-root-dir)))
+   ;; any folder, use .metadata.calibre
+   (t
+    ;; update or generate .metadata.calibre
+    (shell-command-to-string (format "%s -e %s -- %s"
+                              calibredb-debug-program
+                              calibredb-folder-program
+                              calibredb-root-dir))
     (switch-to-buffer (calibredb-search-buffer))
     (goto-char (point-min))
     (calibredb-ref-default-bibliography)
-    (calibredb-search-update-buffer :folder (calibredb-folder-candidates)))
-   (t
-    (message "calibredb: %s is invalid." calibredb-db-dir))))
+    (calibredb-search-update-buffer :folder (calibredb-folder-candidates)))))
 
 (provide 'calibredb)
 ;;; calibredb.el ends here

@@ -442,6 +442,9 @@ ORDER BY
    END),"
   "calibre database query statement: order by favorite, highlight, archive.")
 
+(defvar calibredb-folder-program (concat (file-name-directory load-file-name) "calibredb-folder.py")
+  "Path to calibredb-folder.py program.")
+
 (defun calibredb-query-search-string (filter)
   "DEPRECATED Return the where part of SQL based on FILTER."
   (format
