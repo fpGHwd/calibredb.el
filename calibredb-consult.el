@@ -29,6 +29,7 @@
 (require 'calibredb-core)
 (require 'calibredb-search)
 (require 'calibredb-utils)
+(require 'calibredb-folder)
 
 
 (defcustom calibredb-consult-ripgrep-all-args
@@ -42,14 +43,31 @@ Can be either a string, or a list of strings or expressions."
   "consult read for calibredb."
   (interactive "P")
   (if (fboundp 'consult--read)
-      (let ((candidates (calibredb-candidates)))
+      (let ((candidates (cond
+                         ((and (stringp calibredb-db-dir)
+                               (file-exists-p calibredb-db-dir)
+                               (s-contains? "metadata.db" calibredb-db-dir))
+                          (calibredb-candidates))
+                         (t
+                          ;; update or generate .metadata.calibre
+                          (shell-command-to-string (format "%s -e %s -- %s"
+                                                           calibredb-debug-program
+                                                           calibredb-folder-program
+                                                           calibredb-root-dir))
+                          (calibredb-folder-candidates)))))
         (if candidates
             (calibredb-find-file (consult--read candidates
-                           :prompt "Pick a book: "
+                           :prompt (format "Pick a book at %s: " calibredb-root-dir)
                            :lookup #'consult--lookup-cdr
                            :sort nil) arg)
           (message "INVALID LIBRARY")))))
 
+(defun calibredb-consult-find (arg)
+  "consult find for calibredb, find a ebook in a folder."
+  (interactive "P")
+  (let* ((calibredb-root-dir (read-file-name "Find a ebook from a folder: "))
+         (calibredb-db-dir (expand-file-name ".metadata.calibre" calibredb-root-dir)))
+    (calibredb-consult-read arg)))
 
 (defun calibredb-consult--ripgrep-all-make-builder (paths)
   "Create ripgrep command line builder given PATHS."

@@ -27,6 +27,7 @@
 ;;; Code:
 
 (require 'calibredb-core)
+(require 'calibredb-folder)
 
 
 (declare-function calibredb-set-metadata--tags "calibredb-utils.el")
@@ -81,7 +82,12 @@
                              :header-name (lambda (name)
                                             (concat name " in [" calibredb-root-dir "]"))
                              :candidates (lambda ()
-                                           (calibredb-candidates))
+                                           (cond
+                                            ((and (stringp calibredb-db-dir)
+                                                  (file-exists-p calibredb-db-dir)
+                                                  (s-contains? "metadata.db" calibredb-db-dir))
+                                             (calibredb-candidates))
+                                            (t (calibredb-folder-candidates))))
                              ;; :filtered-candidate-transformer 'helm-findutils-transformer
                              ;; :action-transformer 'helm-transform-file-load-el
                              :persistent-action 'calibredb-view--helm

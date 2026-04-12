@@ -146,7 +146,7 @@ Uses global `calibredb-root-dir`."
                                        (:book-dir           "")
                                        (:book-cover         nil)
                                        (:book-name          "")
-                                       (:book-format        ,(substring (calibredb-folder-mailcap-mime-to-extn (alist-get 'mime entry)) 1))
+                                       (:book-format        ,(substring (or (calibredb-folder-mailcap-mime-to-extn (alist-get 'mime entry)) " ") 1))
                                        (:book-pubdate       ,(or (alist-get 'pubdate entry) ""))
                                        (:book-title         ,(alist-get 'title entry))
                                        (:file-path          ,(expand-file-name lpath calibredb-root-dir))
@@ -208,5 +208,10 @@ Uses global `calibredb-root-dir`."
             ".txt"
           ext))
     ".txt"))
+
+(defun calibredb-find-file ()
+  (interactive)
+
+  )
 
 (provide 'calibredb-folder)

@@ -30,6 +30,7 @@
 (require 'calibredb-search)
 (require 'calibredb-faces)
 (require 'calibredb-utils)
+(require 'calibredb-folder)
 
 (eval-when-compile (defvar counsel-ag-base-command))
 (declare-function counsel-ag "counsel")
@@ -104,7 +105,12 @@ If prefix ARG is non-nil, keep the files after adding without prompt."
 (defun calibredb-ivy-read ()
   "Ivy read for calibredb."
   (if (fboundp 'ivy-read)
-      (let ((cand (calibredb-candidates)))
+      (let ((candidates (cond
+                         ((and (stringp calibredb-db-dir)
+                               (file-exists-p calibredb-db-dir)
+                               (s-contains? "metadata.db" calibredb-db-dir))
+                          (calibredb-candidates))
+                         (t (calibredb-folder-candidates)))))
         (if cand
             (ivy-read "Pick a book: "
                       cand
